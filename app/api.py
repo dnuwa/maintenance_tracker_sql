@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_restful import Resource, Api
 from flask_restful.reqparse import RequestParser
-from app.db import DatabaseManager
+from app.db import DatabaseManager, RequestsManager
 
 app = Flask(__name__)
 api= Api(app, prefix="/api/v1")
@@ -15,11 +15,10 @@ mainreq_request_parser.add_argument("item", type=str, required=True, help="item 
 mainreq_request_parser.add_argument("issue", type=str, required=True, help="issue has to be valid string")
 mainreq_request_parser.add_argument("issue_details", type=str, required=True, help="details must be a valid string")
 mainreq_request_parser.add_argument("status", required=True)
-mainreq_request_parser.add_argument("id", type=int, required=True, help="Please enter valid integer as ID")
+
 
 class UserRegistration(Resource):
-    def post(self):
-        
+    def post(self):        
         data = user_request_parser.parse_args()
         email=data['email']
         password= data['password']
@@ -36,12 +35,7 @@ class UserLogoutAccess(Resource):
     def post(self):
         return {'message': 'User logout'}
       
-      
-class UserLogoutRefresh(Resource):
-    def post(self):
-        return {'message': 'User logout'}
-      
-      
+
 class TokenRefresh(Resource):
     def post(self):
         return {'message': 'Token refresh'}
@@ -56,8 +50,16 @@ class AllUsers(Resource):
 class ManageRequests(Resource):
     
     def post(self):
-        return {"msg": "Request added"}, 201
-        
+        data = mainreq_request_parser.parse_args()
+        item=data['item']
+        issue= data['issue']
+        details = data['issue_details']
+        status = data['status']
+        db  = RequestsManager()
+        db.create_table()
+        db.insert_new_record(item,issue, details, status)
+        return {'messege':'successful!'}, 201
+
     def get(self):
         return {'message': 'All requests'}
 

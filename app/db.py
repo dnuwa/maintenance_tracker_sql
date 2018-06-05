@@ -28,14 +28,25 @@ class DatabaseManager:
         return{'message':'succeful!'}
         # row=self.cursor.execute(sql)
         # for item in row:
+
+class RequestsManager(DatabaseManager):
+    def __init__(self):
+        DatabaseManager.__init__(self)
+    
+    def create_table(self):
+        creata_table_command = "CREATE TABLE IF NOT EXISTS requests(id serial PRIMARY KEY, item varchar(100) NOT NULL, issue varchar(100) NOT NULL, issue_details varchar(500) NOT NULL, status varchar(100))"
+        self.cursor.execute(creata_table_command)
+
+    def insert_new_record(self, item, issue, issue_details, status):        
+        sql = "INSERT INTO requests (item, issue, issue_details, status) VALUES (%s, %s, %s, %s);"
+        self.cursor.execute(sql, (item, issue, issue_details, status,))
+
             
 if __name__ == '__main__':
-    datab = DatabaseManager()
+    datab = RequestsManager()
 
-    datab.query_all()
-    app.run(debug = True) 
-
-     
+    datab.create_table()
+    app.run(debug = True)    
 
 
     
