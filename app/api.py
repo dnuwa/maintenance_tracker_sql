@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_restful import Resource, Api
 from flask_restful.reqparse import RequestParser
-from db import DBManager
+from app.db import DatabaseManager
 
 app = Flask(__name__)
 api= Api(app, prefix="/api/v1")
@@ -21,12 +21,11 @@ class UserRegistration(Resource):
     def post(self):
         
         data = user_request_parser.parse_args()
-        try:            
-            return{
-                'message':'User {} was created'.format(data['username'])
-            }
-        except:
-            return {'message': 'something went wrong'}, 500
+        email=data['email']
+        password= data['password']
+        db  = DatabaseManager()
+        db.insert_new_record(email,password)
+        return {'messege':'successful!'}
         
 class UserLogin(Resource):
     def post(self):
@@ -50,7 +49,9 @@ class TokenRefresh(Resource):
       
 class AllUsers(Resource):
     def get(self):
-        return {'message': 'all users'}
+        db  = DatabaseManager()
+        db.query_all()
+        return {'messege':'successful!'}
 
 class ManageRequests(Resource):
     
