@@ -33,12 +33,9 @@ class DatabaseManager:
         return rows
 
     def login(self, email, password):
-        #find_user = "SELECT * FROM users WHERE email= 'email' AND password = password;"
         self.cursor.execute(
             "SELECT * FROM users WHERE email=%s AND password=%s", (email, password))
         rows = self.cursor.fetchall()
-        #print(rows)
-        #resultd = {'username':results[0], 'password':results[1]}
         return rows
 
 
@@ -60,9 +57,16 @@ class RequestsManager(DatabaseManager):
         rows = self.cursor.fetchall()
         return rows
 
+    def query_by_id(self, id):
+        self.cursor.execute(
+            "SELECT * FROM requests WHERE id=%s;", [id])
+        row = self.cursor.fetchone()
+        return row
+
+    def update_a_request(self, id):
+        pass
 
 if __name__ == '__main__':
-    datab = DatabaseManager()
-
-    datab.query_all()
+    datab = RequestsManager()
+    datab.query_by_id(1)
     app.run(debug=True)
