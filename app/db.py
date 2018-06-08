@@ -44,12 +44,12 @@ class RequestsManager(DatabaseManager):
         DatabaseManager.__init__(self)
 
     def create_table(self):
-        creata_table_command = "CREATE TABLE IF NOT EXISTS requests(id serial PRIMARY KEY, item varchar(100) NOT NULL, issue varchar(100) NOT NULL, issue_details varchar(500) NOT NULL, status varchar(100))"
+        creata_table_command = "CREATE TABLE IF NOT EXISTS requests(id serial PRIMARY KEY, item varchar(100) NOT NULL, issue varchar(100) NOT NULL, issue_details varchar(500) NOT NULL, mode varchar(100), standing varchar(100))"
         self.cursor.execute(creata_table_command)
 
-    def insert_new_record(self, item, issue, issue_details, status):
-        sql = "INSERT INTO requests (item, issue, issue_details, status) VALUES (%s, %s, %s, %s);"
-        self.cursor.execute(sql, (item, issue, issue_details, status,))
+    def insert_new_record(self, item, issue, issue_details, mode):
+        sql = "INSERT INTO requests (item, issue, issue_details, mode) VALUES (%s, %s, %s, %s);"
+        self.cursor.execute(sql, (item, issue, issue_details, mode,))
 
     def query_all(self):
         sql = "SELECT * FROM requests;"
@@ -63,10 +63,23 @@ class RequestsManager(DatabaseManager):
         row = self.cursor.fetchone()
         return row
 
-    def update_a_request(self, id):
-        pass
+
+    def edit_a_record(self, id , item, issue, issue_details, mode, standing):        
+        sql="UPDATE requests SET item=%s, issue=%s, issue_details=%s, mode=%s, standing=%s WHERE id =%s"
+        self.cursor.execute(sql, (item, issue, issue_details, mode ,standing, id))
+
+    def reject_or_approve(self, id, mode):
+        sql="UPDATE requests SET mode=%s WHERE id = %s"           
+        self.cursor.execute(sql, (mode, id))
+
+    def resolve(self, id, standing):
+        sql="UPDATE requests SET standing=%s WHERE id=%s"
+        self.cursor.execute(sql, (standing, id))
+    
+
 
 if __name__ == '__main__':
     datab = RequestsManager()
-    datab.query_by_id(1)
+    datab.create_table()
+    
     app.run(debug=True)
