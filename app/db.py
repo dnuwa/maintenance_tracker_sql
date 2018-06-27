@@ -32,11 +32,15 @@ class DatabaseManager:
         rows = self.cursor.fetchall()
         return rows
 
-    def login(self, email, password):
-        self.cursor.execute(
-            "SELECT * FROM users WHERE email=%s AND password=%s", (email, password))
-        rows = self.cursor.fetchall()
+    def login(self, stored_email, stored_password):
+               
+        sql = "SELECT * FROM users WHERE email=%s AND password=%s" #, (stored_email, stored_password)
+        vars = stored_email, stored_password
+        self.cursor.execute(sql, vars)
+        rows = self.cursor.fetchone()
+        print(rows)
         return rows
+        
 
 
 class RequestsManager(DatabaseManager):
@@ -55,7 +59,12 @@ class RequestsManager(DatabaseManager):
         sql = "SELECT * FROM requests;"
         self.cursor.execute(sql)
         rows = self.cursor.fetchall()
+        # print (rows)
         return rows
+        # for dics in rows:
+        #     print (dics)
+        
+
 
     def query_by_id(self, id):
         self.cursor.execute(
@@ -80,6 +89,9 @@ class RequestsManager(DatabaseManager):
 
 if __name__ == '__main__':
     datab = RequestsManager()
-    datab.create_table()
+    datab.query_all()
+
+    # user = DatabaseManager()
+    # user.login('barnabus.k@gmail.com', '1234')
     
     app.run(debug=True)

@@ -3,9 +3,7 @@ from flask_restful import Resource, Api
 from flask_restful.reqparse import RequestParser
 from app.db import DatabaseManager, RequestsManager
 import re
-import hashlib
-import uuid
-from werkzeug.security import check_password_hash, generate_password_hash
+
 
 from flask_jwt_extended import (
     create_access_token, jwt_required, get_jwt_identity)
@@ -50,11 +48,7 @@ class UserRegistration(Resource):
         db.create_table()
         db.insert_new_record(email, password)
         return {'message':'User {} was created'.format(data['email'])}
-        # access_token = create_access_token(identity=data['email'])
-        # return {
-        #     'message': 'User {} was created'.format(data['email']),
-        #     'access_token': access_token
-        # }
+       
 
 
 class UserLogin(Resource):
@@ -63,23 +57,25 @@ class UserLogin(Resource):
         email = data['email']
         password = data['password']
         user_login = DatabaseManager()
-        user_login.login(email, password)
-        access_token = create_access_token(identity=data['email'])
-        return {
-            'message': 'Logged in as {}'.format(data['email']),
-            'access_token': access_token
-        }
+        result = user_login.login(email, password)
+        return result
+        
+        # access_token = create_access_token(identity=data['email'])
+        # return {
+        #     'message': 'Logged in as {}'.format(data['email']),
+        #     'access_token': access_token
+        # }
 
 
 class AllUsers(Resource):
-    @jwt_required
+   # @jwt_required
     def get(self):
         db = DatabaseManager()
         return db.query_all()
 
 
 class ManageRequests(Resource):
-    @jwt_required
+   # @jwt_required
     def post(self):
         data = mainreq_request_parser.parse_args()
         item = data['item']
@@ -93,14 +89,14 @@ class ManageRequests(Resource):
 
 
 class AllRequests(Resource):
-    @jwt_required
+    #@jwt_required
     def get(self):
         db = RequestsManager()
         return db.query_all()
 
 
 class Manage(Resource):
-    @jwt_required
+    #@jwt_required
     def put(self, id):
         data = mainreq_request_parser.parse_args()
         item = data['item']
@@ -116,4 +112,3 @@ class Manage(Resource):
         db = RequestsManager()
         return db.query_by_id(id)
 
-#class esolve

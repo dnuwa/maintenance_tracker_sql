@@ -12,6 +12,7 @@ api.add_resource(AllRequests, '/requests')#view all requests
 api.add_resource(Manage, '/users/requests/<int:id>')#put and get for a single record
 
 
+
 api.add_resource(AllUsers, '/users')
 
 
