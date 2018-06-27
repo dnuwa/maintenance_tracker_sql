@@ -1,8 +1,7 @@
 import json
 import unittest
 
-from app.api import (AllUsers, AllRequests, Manage, ManageRequests, UserLogin,
-                     UserRegistration, api, app)
+from app.api import AllUsers, AllRequests, Manage, ManageRequests, UserLogin, UserRegistration, api, app
 from flask_testing import TestCase
 import run
 
