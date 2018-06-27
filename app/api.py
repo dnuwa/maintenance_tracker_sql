@@ -47,7 +47,7 @@ class UserRegistration(Resource):
         db = DatabaseManager()
         db.create_table()
         db.insert_new_record(email, password)
-        return {'message':'User {} was created'.format(data['email'])}
+        return {'message':'User {} was created'.format(data['email'])}, 201
        
 
 
@@ -58,8 +58,8 @@ class UserLogin(Resource):
         password = data['password']
         user_login = DatabaseManager()
         result = user_login.login(email, password)
-        return result
-        
+        return result, 200
+               
         # access_token = create_access_token(identity=data['email'])
         # return {
         #     'message': 'Logged in as {}'.format(data['email']),
@@ -110,5 +110,5 @@ class Manage(Resource):
 
     def get(self, id):
         db = RequestsManager()
-        return db.query_by_id(id)
+        return db.query_by_id(id), 200
 
