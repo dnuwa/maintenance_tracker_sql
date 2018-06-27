@@ -28,9 +28,9 @@ class TestUserService(BaseTestCase):
         print(response)
         self.assertEqual(response.status_code, 201) 
 
-    def test_user_login_successfuly(self):
-        response = self.client.post('/api/v1/auth/login')
-        self.assertEqual(response.status_code, 200)      
+    # def test_user_login_successfuly(self):
+    #     response = self.client.post('/api/v1/auth/login')
+    #     self.assertEqual(response.status_code, 200)      
 
             
     def test_access_request_by_id(self):
