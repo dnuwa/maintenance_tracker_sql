@@ -16,7 +16,7 @@ class TestUserService(BaseTestCase):
 
     def test_access_all_requests(self):
         response = self.client.get('/api/v1/requests')
-        result = json.loads(response.data)
+        #result = json.loads(response.data)
         self.assertEqual(response.status_code, 200)
         #print(result)
         # self.assertIn('issue', result)
