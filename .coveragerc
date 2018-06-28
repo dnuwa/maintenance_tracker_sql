@@ -1,0 +1,36 @@
+[report]
+omit =
+    */python?.?/*
+    */site-packages/nose/*
+    *__init__*
+    */werkzeug/*
+    */jinja2/*
+    */markupsafe/*
+    */asyncio/*
+    */concurrent/*
+    */ctypes/*
+    */html/*
+    */http/*
+    */multiprocessing/*
+    */asn1crypto/*
+    */psycopg2/*
+    */jwt/*
+    */flask_restful/*
+    */flask_jwt_extended/*
+    */flask/*
+    */cryptography/*
+    */colorama/*
+    */click/*
+    */encodings/*
+    */app/*
+    *six.py
+    *itsdangerous.py
+    *hmac.py
+    *uuid.py
+    *stringprep.py
+    *socketserver.py
+    *numbers.py
+    *mimetypes.py
+    *decimal.py
+
+
