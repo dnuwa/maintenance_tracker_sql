@@ -22,7 +22,6 @@ omit =
     */colorama/*
     */click/*
     */encodings/*
-    */app/*
     *six.py
     *itsdangerous.py
     *hmac.py
