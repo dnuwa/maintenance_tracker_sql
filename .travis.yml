@@ -6,10 +6,9 @@ python:
 install:
   - "pip install -r requirements.txt"
   - "pip install psycopg2-binary"
-  - "export PYTHONPATH=$PYTHONPATH:$(pwd)"
  
 script: 
-  - nosetests --with-coverage 
+  - "nosetests --with-coverage --cover-package app" 
  
 after_success:
   - "coveralls"
