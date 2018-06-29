@@ -23,7 +23,6 @@ mainreq_request_parser.add_argument(
     "issue", type=str, required=True, help="issue has to be valid string")
 mainreq_request_parser.add_argument(
     "issue_details", type=str, required=True, help="details must be a valid string")
-#state = mainreq_request_parser.add_argument("status", required=True)
 mainreq_request_parser.add_argument(
     "mode", type=str, help="item has to be valid string")
 mainreq_request_parser.add_argument(
@@ -35,7 +34,7 @@ class UserRegistration(Resource):
         data = user_request_parser.parse_args()
         email = data['email']
         password = data['password']
-        #password = generate_password_hash(data['password'], method="sha256")     
+        #password = generate_password_hash(data['password'], method="sha256")
         if not email:
             return {'message': 'please enter email'}
         if not password:
@@ -43,23 +42,31 @@ class UserRegistration(Resource):
         if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
             return {'message': 'Invalid email address'}
 
-
         db = DatabaseManager()
         db.create_table()
         db.insert_new_record(email, password)
-        return {'message':'User {} was created'.format(data['email'])}, 201
-       
+        return {'message': 'User {} was created'.format(data['email'])}, 201
 
 
 class UserLogin(Resource):
     def post(self):
-        data = user_request_parser.parse_args()
-        email = data['email']
-        password = data['password']
-        user_login = DatabaseManager()
-        result = user_login.login(email, password)
-        return result, 200
-               
+        while True:
+            try:
+                data = user_request_parser.parse_args()
+                email = data['email']
+                password = data['password']
+                userobj = DatabaseManager()
+                response = userobj.login(email, password)
+
+                if (email == '' and password == ''):
+                    return {"message": "please provide a valide email address and password"}, 400
+                elif (response != None):
+                    return response, 200
+                else:
+                    return {"message": "Please ensure that username and password are correct"}, 400
+            except:
+                return {"message": "user doesnt exist"}, 400
+
         # access_token = create_access_token(identity=data['email'])
         # return {
         #     'message': 'Logged in as {}'.format(data['email']),
@@ -89,21 +96,21 @@ class ManageRequests(Resource):
 
 
 class AllRequests(Resource):
-    #@jwt_required
+    # @jwt_required
     def get(self):
         db = RequestsManager()
         return db.query_all()
 
 
 class Manage(Resource):
-    #@jwt_required
+    # @jwt_required
     def put(self, id):
         data = mainreq_request_parser.parse_args()
         item = data['item']
         issue = data['issue']
         details = data['issue_details']
         mode = data['mode']
-        standing =data['standing']
+        standing = data['standing']
         db = RequestsManager()
         db.edit_a_record(id, item, issue, details, mode, standing,)
         return {'message': 'request updated'}
@@ -111,4 +118,3 @@ class Manage(Resource):
     def get(self, id):
         db = RequestsManager()
         return db.query_by_id(id), 200
-

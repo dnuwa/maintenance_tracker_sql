@@ -33,16 +33,14 @@ class DatabaseManager:
         return rows
 
     def login(self, stored_email, stored_password):
-               
+                       
         sql = "SELECT * FROM users WHERE email=%s AND password=%s" #, (stored_email, stored_password)
         vars = stored_email, stored_password
         self.cursor.execute(sql, vars)
         rows = self.cursor.fetchone()
-        print(rows)
+        #print(rows)
         return rows
-        
-
-
+                
 class RequestsManager(DatabaseManager):
     def __init__(self):
         DatabaseManager.__init__(self)
