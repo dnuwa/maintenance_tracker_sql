@@ -60,8 +60,7 @@ class RequestsManager(DatabaseManager):
         # print (rows)
         return rows
         # for dics in rows:
-        #     print (dics)
-        
+        #     print (dics)      
 
 
     def query_by_id(self, id):
@@ -82,6 +81,10 @@ class RequestsManager(DatabaseManager):
     def resolve(self, id, standing):
         sql="UPDATE requests SET standing=%s WHERE id=%s"
         self.cursor.execute(sql, (standing, id))
+
+    def update_pending_request(self, id, standing):
+        query ="UPDATE requests SET  mode=%s, standing=%s WHERE id =%s"
+        self.cursor.execute(query, ( standing, id))
     
 
 

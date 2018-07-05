@@ -44,8 +44,12 @@ class UserRegistration(Resource):
 
         db = DatabaseManager()
         db.create_table()
-        db.insert_new_record(email, password)
-        return {'message': 'User {} was created'.format(data['email'])}, 201
+        querydb = db.login(email, password)
+        if (querydb == None):
+            db.insert_new_record(email, password)
+            return {'message': 'User {} was created'.format(data['email'])}, 201
+        else:
+            return {'message': 'User {} already exists'.format(data['email'])}, 400
 
 
 class UserLogin(Resource):
@@ -112,9 +116,43 @@ class Manage(Resource):
         mode = data['mode']
         standing = data['standing']
         db = RequestsManager()
-        db.edit_a_record(id, item, issue, details, mode, standing,)
-        return {'message': 'request updated'}
+        to_be_edited = db.query_by_id(id)
+
+        if(to_be_edited != None):
+            if to_be_edited['standing'] != None and to_be_edited['standing'] != "":
+                return {'Message':'Record cant be editted'}
+            else:
+                db.edit_a_record(id, item, issue, details, mode, standing)
+                record = db.query_by_id(id)
+                return {'Update':record}, 201
+
+        else:
+            return {"message":"request id is out of range"}, 500
+
 
     def get(self, id):
         db = RequestsManager()
-        return db.query_by_id(id), 200
+        id_In_range = db.query_by_id(id)
+        if (id_In_range != None):
+            return db.query_by_id(id), 200
+        else:
+            return {"message":"request id is out of range"}, 500
+
+class AdminApproval(Resource):
+    def put(self, id):
+        db = RequestsManager()
+        to_be_approved = db.query_by_id(id)
+
+        if(to_be_approved != None):
+            if to_be_approved['standing'] != None and to_be_approved['standing'] != "":
+                return {'Message':'Request already Approved'}
+            else:
+                to_be_approved['standing'] = 'Approved'
+                new_value = to_be_approved['standing']
+                db.update_pending_request(id, new_value)
+                record = db.query_by_id(id)
+                return {'Update':record}, 201
+
+        else:
+            return {"message":"request doesnt exist"}, 500
+
