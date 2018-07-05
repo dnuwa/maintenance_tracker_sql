@@ -83,8 +83,9 @@ class RequestsManager(DatabaseManager):
         self.cursor.execute(sql, (standing, id))
 
     def update_pending_request(self, id, standing):
-        query ="UPDATE requests SET  mode=%s, standing=%s WHERE id =%s"
-        self.cursor.execute(query, ( standing, id))
+        query ="UPDATE requests SET standing=%s WHERE id =%s"
+        vars =  standing, id
+        self.cursor.execute(query, vars)
     
 
 
