@@ -16,7 +16,7 @@ class DatabaseManager:
 
             print("Database connected!")
         except:
-            print("I am unable to connect to the database.")
+            print("unable to connect to the database.")
 
     def create_table(self):
         creata_table_command = "CREATE TABLE IF NOT EXISTS users(id serial PRIMARY KEY, email varchar(100) NOT NULL, password varchar(100) NOT NULL)"
@@ -25,6 +25,14 @@ class DatabaseManager:
     def insert_new_record(self, email, password):
         sql = "INSERT INTO users (email, password) VALUES (%s, %s);"
         self.cursor.execute(sql, (email, password,))
+        
+    #this method query's the dadabsse with the email as its input value
+    def should_be_unique(self, email):
+        sql = "SELECT * FROM users WHERE email = %s"
+        self.cursor.execute(sql, (email,))
+        rows = self.cursor.fetchone()
+        print(rows)
+        return rows
 
     def query_all(self):
         sql = "SELECT * FROM users;"
@@ -38,7 +46,7 @@ class DatabaseManager:
         vars = stored_email, stored_password
         self.cursor.execute(sql, vars)
         rows = self.cursor.fetchone()
-        #print(rows)
+        print(rows)
         return rows
                 
 class RequestsManager(DatabaseManager):
@@ -74,15 +82,12 @@ class RequestsManager(DatabaseManager):
         sql="UPDATE requests SET item=%s, issue=%s, issue_details=%s, mode=%s, standing=%s WHERE id =%s"
         self.cursor.execute(sql, (item, issue, issue_details, mode ,standing, id))
 
-    def reject_or_approve(self, id, mode):
-        sql="UPDATE requests SET mode=%s WHERE id = %s"           
-        self.cursor.execute(sql, (mode, id))
+    def disapprove_or_approve(self, id, mode):
+        query = "UPDATE requests SET mode=%s WHERE id =%s"
+        vars = mode, id
+        self.cursor.execute(query, vars)
 
-    def resolve(self, id, standing):
-        sql="UPDATE requests SET standing=%s WHERE id=%s"
-        self.cursor.execute(sql, (standing, id))
-
-    def update_pending_request(self, id, standing):
+    def resolve_request(self, id, standing):
         query ="UPDATE requests SET standing=%s WHERE id =%s"
         vars =  standing, id
         self.cursor.execute(query, vars)
@@ -90,10 +95,10 @@ class RequestsManager(DatabaseManager):
 
 
 if __name__ == '__main__':
-    datab = RequestsManager()
-    datab.query_all()
+    # datab = RequestsManager()
+    # datab.query_all()
 
-    # user = DatabaseManager()
-    # user.login('barnabus.k@gmail.com', '1234')
+    user = DatabaseManager()
+    user.should_be_unique('s.joseph@gmail.com')
     
     app.run(debug=True)
